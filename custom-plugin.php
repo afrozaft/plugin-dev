@@ -19,13 +19,24 @@ add_action('admin_menu', 'cp_add_admin_menu');
 // Add a custom menu in the admin panel
 function cp_add_admin_menu() {
     add_menu_page('Employee System | Employee Management Sytem', 'Employee System ', 'manage_options', 'employee-system', 'ems_crud_system', 'dashicons-businessman', 26);
+
+    // Add Submenu
+    add_submenu_page( 'employee-system', 'Add Employee', 'Add Employee', 'manage_options', 'employee-system', 'ems_crud_system');
+
+    // Add Submenu
+    add_submenu_page( 'employee-system', 'List Employee', 'List Employee', 'manage_options', 'list_emmployee', 'ems_list_emmployee');
 }
+
 
 // Handle the callback function of the admin menu
 function ems_crud_system(){
 
-    echo "<h1>Welcome To Employee Management System</h1>";
+    echo "<h2>Welcome To Add Employee</h2>";
 }
 
-
+// Handle the callback function of the admin submenu
+function ems_list_emmployee(){
+    
+    echo "<h2>Welcome To List Employee</h2>";
+}
 ?>
