@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Custom Plugin
+ * Plugin Name: Employee Management System
  * Plugin URI: https://www.example.com
- * Description: This is a custom plugin
+ * Description: A simple CRUD employee management system plugin.
  * Plugin URI: https://www.example.com
  * Author: Afroz Alam
  * Author URI: https://www.github.com/afrozaft/custom-plugin
@@ -18,13 +18,13 @@ add_action('admin_menu', 'cp_add_admin_menu');
 
 // Add a custom menu in the admin panel
 function cp_add_admin_menu() {
-    add_menu_page('Custom Plugin Menu', 'Custom Plugin', 'manage_options', 'cp-plugin', 'cp_handle_admin_menu', 'dashicons-admin-settings', 26);
+    add_menu_page('Employee System | Employee Management Sytem', 'Employee System ', 'manage_options', 'employee-system', 'ems_crud_system', 'dashicons-businessman', 26);
 }
 
 // Handle the callback function of the admin menu
-function cp_handle_admin_menu(){
+function ems_crud_system(){
 
-    echo "<h2>Welcome To Custom Plugin!!!</h2>";
+    echo "<h1>Welcome To Employee Management System</h1>";
 }
 
 
