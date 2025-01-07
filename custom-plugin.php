@@ -13,6 +13,8 @@
  *
  */
 
+// Define the plugin path constant
+define("EMS_PLUGIN_PATH", plugin_dir_path(__FILE__));
  // Calling action hook to add admin menu
 add_action('admin_menu', 'cp_add_admin_menu');
 
@@ -24,19 +26,19 @@ function cp_add_admin_menu() {
     add_submenu_page( 'employee-system', 'Add Employee', 'Add Employee', 'manage_options', 'employee-system', 'ems_crud_system');
 
     // Add Submenu
-    add_submenu_page( 'employee-system', 'List Employee', 'List Employee', 'manage_options', 'list_emmployee', 'ems_list_emmployee');
+    add_submenu_page( 'employee-system', 'List Employee', 'List Employee', 'manage_options', 'list-employee', 'ems_list_emmployee');
 }
 
 
 // Handle the callback function of the admin menu
 function ems_crud_system(){
 
-    echo "<h2>Welcome To Add Employee</h2>";
+    include_once(EMS_PLUGIN_PATH . 'pages/add-employee.php');
 }
 
 // Handle the callback function of the admin submenu
 function ems_list_emmployee(){
     
-    echo "<h2>Welcome To List Employee</h2>";
+    include_once(EMS_PLUGIN_PATH . 'pages/list-employee.php');
 }
 ?>
