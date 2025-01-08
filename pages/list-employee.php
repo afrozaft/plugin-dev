@@ -20,13 +20,13 @@
                         <table class="table" id="tbl-employee">
                         <thead>
                         <tr>
-                            <th>#ID</th>
-                            <th>#Name</th>
-                            <th>#Email</th>
-                            <th>#Phone No.</th>
-                            <th>#Gender</th>
-                            <th>#Designation</th>
-                            <th>#Action</th>
+                            <th># ID</th>
+                            <th># Name</th>
+                            <th># Email</th>
+                            <th># Phone No.</th>
+                            <th># Gender</th>
+                            <th># Designation</th>
+                            <th># Action</th>
                         </tr>
                         </thead>
                         <tbody>
