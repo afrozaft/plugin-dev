@@ -82,4 +82,20 @@ register_deactivation_hook( __FILE__, 'ems_drop_table' );
         $wpdb->query($sql);
     }
 
+    // Enqueue scripts and styles
+    add_action('admin_enqueue_scripts', 'ems_add_plugin_assets');
+    
+        function ems_add_plugin_assets(){
+            // css files
+            wp_enqueue_style("ems-bootstrap-css", EMS_PLUGIN_URL."css/bootstrap.min.css", array(), "1.0.0", "all");
+            wp_enqueue_style("ems-datatable-css", EMS_PLUGIN_URL."css/dataTables.dataTables.min.css", array(), "1.0.0", "all");
+
+            // js files
+            wp_enqueue_script("ems-bootstrap-js", EMS_PLUGIN_URL."js/bootstrap.min.js", array("jquery"), "1.0.0", true);
+            wp_enqueue_script("ems-datatable-js", EMS_PLUGIN_URL."js/dataTables.min.js", array("jquery"), "1.0.0", true);
+            wp_enqueue_script("ems-custom-js", EMS_PLUGIN_URL."js/custom.js", array("jquery"), "1.0.0", true);
+        }
+
+
+
 ?>
