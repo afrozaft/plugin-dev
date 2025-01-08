@@ -15,6 +15,8 @@
 
 // Define the plugin path constant
 define("EMS_PLUGIN_PATH", plugin_dir_path(__FILE__));
+
+define("EMS_PLUGIN_URL", plugin_dir_url(__FILE__));
  // Calling action hook to add admin menu
 add_action('admin_menu', 'cp_add_admin_menu');
 
