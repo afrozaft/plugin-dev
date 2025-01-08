@@ -44,6 +44,7 @@ function ems_list_emmployee(){
     include_once(EMS_PLUGIN_PATH . 'pages/list-employee.php');
 }
 
+// Activation of this plugin to create database table
 register_activation_hook( __FILE__, 'ems_create_table' );
 
 function ems_create_table(){
@@ -52,7 +53,7 @@ function ems_create_table(){
     $table_prefix = $wpdb->prefix; //wp_
     $sql = "
     
-        CREATE TABLE {$table_prefix}wp_ems_form_data (
+        CREATE TABLE {$table_prefix}ems_form_data (
         `id` int NOT NULL AUTO_INCREMENT,
         `name` varchar(120) DEFAULT NULL,
         `email` varchar(80) DEFAULT NULL,
@@ -67,5 +68,18 @@ function ems_create_table(){
     include_once(ABSPATH.'wp-admin/includes/upgrade.php');
     dbDelta($sql);
 }
+
+// Deactivation of this plugin to delete database table
+register_deactivation_hook( __FILE__, 'ems_drop_table' );
+
+    function ems_drop_table(){
+
+        global $wpdb;
+        $table_prefix = $wpdb->prefix; //wp_
+
+        $sql = "DROP TABLE IF EXISTS {$table_prefix}ems_form_data";
+
+        $wpdb->query($sql);
+    }
 
 ?>
