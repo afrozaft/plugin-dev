@@ -70,7 +70,7 @@ function ems_create_table(){
 }
 
 // Deactivation of this plugin to delete database table
-register_deactivation_hook( __FILE__, 'ems_drop_table' );
+register_uninstall_hook( __FILE__, 'ems_drop_table' );
 
     function ems_drop_table(){
 
