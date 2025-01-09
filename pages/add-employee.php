@@ -8,14 +8,14 @@
             <div class="panel panel-primary">
             <div class="panel-heading">Add New Employee</div>
             <div class="panel-body">
-                <form action="/action_page.php">
+                <form action="javascript:void(0)" method="post" id="ems-frm-add-employee">
                     <div class="form-group">
                         <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter name" name="name">
+                        <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
                     </div>
                     <div class="form-group">
                         <label for="phoneNo">Phone No:</label>
