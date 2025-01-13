@@ -69,7 +69,7 @@ function ems_create_table(){
     dbDelta($sql);
 }
 
-// Deactivation of this plugin to delete database table
+// Uninstall this plugin to delete database table
 register_uninstall_hook( __FILE__, 'ems_drop_table' );
 
     function ems_drop_table(){
