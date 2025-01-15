@@ -1,9 +1,31 @@
 <?php
 
-    $message = " ";
-    $status = " ";
+$message = " ";
+$status = " ";
+$action = " ";
+$empId = " ";
 
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])){
+if (isset($_GET['action']) && isset($_GET['empId'])) {
+
+    global $wpdb;
+    $empId = $_GET['empId'];
+
+    // Action Edit
+    if ($_GET['action'] == "edit") {
+        $action = "edit";
+    }
+    // Action View
+    if ($_GET['action'] == "view") {
+        $action = "view";
+    }
+
+
+    // Single Employee Information
+    $employee = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}ems_form_data WHERE id = %d", $empId), ARRAY_A);
+}
+
+// Save form data
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
 
     // Form Submited
     global $wpdb;
@@ -24,13 +46,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])){
     ));
 
     $last_inserted_id = $wpdb->insert_id;
-    
-    if($last_inserted_id > 0){
+
+    if ($last_inserted_id > 0) {
 
         $message = "Employee added successfully!";
         $status = 1;
-
-    }else{
+    } else {
 
         $message = "Failed to add employee!";
         $status = 0;
@@ -38,69 +59,119 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])){
 }
 
 ?>
- 
+
 <div class="container">
-  <div class="row">
-    <div class="col-sm-8">
-        <h2>Add Employee</h2>
-        <div class="panel-group">
-            <div class="panel panel-primary">
-            <div class="panel-heading">Add New Employee</div>
-            <div class="panel-body">
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>
+                <?php
+                if ($action == "view") {
 
-            <?php 
-
-                if(!empty($message)){
-                    if($status == 1){
-                        ?>
-                            <div class="alert alert-success">
-                                <?php echo $message; ?>
-                            </div>
-                        <?php 
-                    } else {
-                        ?>
-                            <div class="alert alert-danger">
-                                <?php echo $message; ?>
-                            </div>
-                        <?php
-                    }
+                    echo "View Employee";
+                } else {
+                    echo "Add Employee";
                 }
-            
-            ?>
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>?page=employee-system" method="post" id="ems-frm-add-employee">
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" required>
+                ?>
+            </h2>
+            <div class="panel-group">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><?php
+                                                if ($action == "view") {
+
+                                                    echo "View Employee";
+                                                } else {
+                                                    echo "Add Employee";
+                                                }
+                                                ?></div>
+                    <div class="panel-body">
+
+                        <?php
+
+                        if (!empty($message)) {
+                            if ($status == 1) {
+                        ?>
+                                <div class="alert alert-success">
+                                    <?php echo $message; ?>
+                                </div>
+                            <?php
+                            } else {
+                            ?>
+                                <div class="alert alert-danger">
+                                    <?php echo $message; ?>
+                                </div>
+                        <?php
+                            }
+                        }
+
+                        ?>
+                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>?page=employee-system" method="post" id="ems-frm-add-employee">
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" value="<?php if ($action == 'view') {
+                                                                echo $employee['name'];
+                                                            } ?> " class="form-control" id="name" placeholder="Enter name" name="name" required <?php if ($action == 'view') {
+                                                                                                                                                    echo "readonly='readonly'";
+                                                                                                                                                } ?>>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" value="<?php if ($action == 'view') {
+                                                                echo $employee['email'];
+                                                            } ?>" class="form-control" id="email" placeholder="Enter email" name="email" required <?php if ($action == 'view') {
+                                                                                                                                                        echo "readonly='readonly'";
+                                                                                                                                                    } ?>>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNo">Phone No:</label>
+                                <input type="text" value="<?php if ($action == 'view') {
+                                                                echo $employee['phoneNo'];
+                                                            } ?>" class="form-control" id="phoneNo" placeholder="Enter phone no" name="phoneNo" <?php if ($action == 'view') {
+                                                                                                                                                    echo "readonly='readonly'";
+                                                                                                                                                } ?>>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender:</label>
+                                <select name="gender" <?php if ($action == "view") {
+                                                            echo "disabled";
+                                                        } ?> id="gender" class="form-control">
+                                    <option value="male" <?php if ($action == "view" && $employee['gender'] == "male") {
+                                                                echo "selected";
+                                                            } ?>>Male</option>
+                                    <option value="female" <?php if ($action == "view" && $employee['gender'] == "female") {
+                                                                echo "selected";
+                                                            } ?>>Female</option>
+                                    <option value="other" <?php if ($action == "view" && $employee['gender'] == "other") {
+                                                                echo "selected";
+                                                            } ?>>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="designation">Designation:</label>
+                                <input type="text" value="<?php if ($action == 'view') {
+                                                                echo $employee['designation'];
+                                                            } ?>" class="form-control" id="designation" placeholder="Enter designation" name="designation" <?php if ($action == 'view') {
+                                                                                                                                                                echo "readonly='readonly'";
+                                                                                                                                                            } ?>>
+                            </div>
+                            <?php
+                            if ($action == "view") {
+
+                                // No Button
+                            } else {
+                            ?>
+                                <button type="submit" class="btn btn-danger" name="btn_submit">Submit</button>
+
+                            <?php
+
+                            }
+                            ?>
+
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phoneNo">Phone No:</label>
-                        <input type="text" class="form-control" id="phoneNo" placeholder="Enter phone no" name="phoneNo">
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Gender:</label>
-                        <select name="gender" id="gender" class="form-control">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="designation">Designation:</label>
-                        <input type="text" class="form-control" id="designation" placeholder="Enter designation" name="designation">
-                    </div>
-                    <button type="submit" class="btn btn-danger" name="btn_submit">Submit</button>
-                </form>
+                </div>
+
+
             </div>
         </div>
-
-    
-     </div>
     </div>
-  </div>
 </div>
-
-
