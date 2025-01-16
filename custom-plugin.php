@@ -104,5 +104,5 @@ function ems_add_plugin_assets()
     wp_enqueue_script("ems-validate-js", EMS_PLUGIN_URL . "js/jquery.validate.min.js", array("jquery"), "1.0.0", true);
     // wp_enqueue_script("ems-custom-js", EMS_PLUGIN_URL . "js/custom.js", array("jquery"), "1.0.0", true);
 
-    wp_add_inline_script('ems-validate-js', 'jQuery(function(){new DataTable("#tbl-employee"); jQuery("#ems-frm-add-employee").validate();});');
+    wp_add_inline_script('ems-validate-js', file_get_contents(EMS_PLUGIN_URL . 'js/custom.js'));
 }
