@@ -36,25 +36,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
     $gender = sanitize_text_field($_POST['gender']);
     $designation = sanitize_text_field($_POST['designation']);
 
-    // Insert Command
-    $wpdb->insert("{$wpdb->prefix}ems_form_data", array(
-        "name" => $name,
-        "email" => $email,
-        "phoneNO" => $phoneNo,
-        "gender" => $gender,
-        "designation" => $designation
-    ));
+    // Action type
+    if (isset($_GET['action'])) {
+        $empId = $_GET['empId'];
+        //Edit operation
+        $wpdb->update("{$wpdb->prefix}ems_form_data", array(
+            "name" => $name,
+            "email" => $email,
+            "phoneNo" => $phoneNo,
+            "gender" => $gender,
+            "designation" => $designation
+        ), array(
+            "id" => $empId
 
-    $last_inserted_id = $wpdb->insert_id;
+        ));
 
-    if ($last_inserted_id > 0) {
-
-        $message = "Employee added successfully!";
+        $message = "Employee updated successfully!";
         $status = 1;
     } else {
+        //Add operation
 
-        $message = "Failed to add employee!";
-        $status = 0;
+        // Insert Command
+        $wpdb->insert("{$wpdb->prefix}ems_form_data", array(
+            "name" => $name,
+            "email" => $email,
+            "phoneNO" => $phoneNo,
+            "gender" => $gender,
+            "designation" => $designation
+        ));
+
+        $last_inserted_id = $wpdb->insert_id;
+
+        if ($last_inserted_id > 0) {
+
+            $message = "Employee added successfully!";
+            $status = 1;
+        } else {
+
+            $message = "Failed to add employee!";
+            $status = 0;
+        }
     }
 }
 
@@ -68,6 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
                 if ($action == "view") {
 
                     echo "View Employee";
+                } elseif ($action == "edit") {
+                    echo "Edit Employee";
                 } else {
                     echo "Add Employee";
                 }
@@ -79,6 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
                                                 if ($action == "view") {
 
                                                     echo "View Employee";
+                                                } elseif ($action == "edit") {
+                                                    echo "Edit Employee";
                                                 } else {
                                                     echo "Add Employee";
                                                 }
@@ -94,20 +119,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
                                     <?php echo $message; ?>
                                 </div>
                             <?php
-                            } else {
+                            } else if ($status == 0) {
                             ?>
                                 <div class="alert alert-danger">
                                     <?php echo $message; ?>
                                 </div>
                         <?php
+
                             }
                         }
 
                         ?>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>?page=employee-system" method="post" id="ems-frm-add-employee">
+                        <form action="<?php if ($action == 'edit') {
+                                            echo "admin.php?page=employee-system&action=edit&empId=" . $empId;
+                                        } else {
+                                            echo "admin.php?page=employee-system";
+                                        }  ?>"
+                            method="post" id="ems-frm-add-employee">
+
                             <div class="form-group">
                                 <label for="name">Name:</label>
-                                <input type="text" value="<?php if ($action == 'view') {
+                                <input type="text" value="<?php if ($action == 'view' || $action == 'edit') {
                                                                 echo $employee['name'];
                                                             } ?> " class="form-control" id="name" placeholder="Enter name" name="name" required <?php if ($action == 'view') {
                                                                                                                                                     echo "readonly='readonly'";
@@ -115,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
                             </div>
                             <div class="form-group">
                                 <label for="email">Email:</label>
-                                <input type="email" value="<?php if ($action == 'view') {
+                                <input type="email" value="<?php if ($action == 'view' || $action == 'edit') {
                                                                 echo $employee['email'];
                                                             } ?>" class="form-control" id="email" placeholder="Enter email" name="email" required <?php if ($action == 'view') {
                                                                                                                                                         echo "readonly='readonly'";
@@ -123,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
                             </div>
                             <div class="form-group">
                                 <label for="phoneNo">Phone No:</label>
-                                <input type="text" value="<?php if ($action == 'view') {
+                                <input type="text" value="<?php if ($action == 'view' || $action == 'edit') {
                                                                 echo $employee['phoneNo'];
                                                             } ?>" class="form-control" id="phoneNo" placeholder="Enter phone no" name="phoneNo" <?php if ($action == 'view') {
                                                                                                                                                     echo "readonly='readonly'";
@@ -134,20 +166,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
                                 <select name="gender" <?php if ($action == "view") {
                                                             echo "disabled";
                                                         } ?> id="gender" class="form-control">
-                                    <option value="male" <?php if ($action == "view" && $employee['gender'] == "male") {
+                                    <option value="male" <?php if (($action == "view" || $action == 'edit') && $employee['gender'] == "male") {
                                                                 echo "selected";
                                                             } ?>>Male</option>
-                                    <option value="female" <?php if ($action == "view" && $employee['gender'] == "female") {
+                                    <option value="female" <?php if (($action == "view" || $action == 'edit') && $employee['gender'] == "female") {
                                                                 echo "selected";
                                                             } ?>>Female</option>
-                                    <option value="other" <?php if ($action == "view" && $employee['gender'] == "other") {
+                                    <option value="other" <?php if (($action == "view" || $action == 'edit') && $employee['gender'] == "other") {
                                                                 echo "selected";
                                                             } ?>>Other</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="designation">Designation:</label>
-                                <input type="text" value="<?php if ($action == 'view') {
+                                <input type="text" value="<?php if ($action == 'view' || $action == 'edit') {
                                                                 echo $employee['designation'];
                                                             } ?>" class="form-control" id="designation" placeholder="Enter designation" name="designation" <?php if ($action == 'view') {
                                                                                                                                                                 echo "readonly='readonly'";
@@ -157,9 +189,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_submit'])) {
                             if ($action == "view") {
 
                                 // No Button
+                            } elseif ($action == "edit") {
+                            ?>
+                                <button type="submit" class="btn btn-warning" name="btn_submit">Update</button>
+
+                            <?php
                             } else {
                             ?>
-                                <button type="submit" class="btn btn-danger" name="btn_submit">Submit</button>
+                                <button type="submit" class="btn btn-success" name="btn_submit">Submit</button>
 
                             <?php
 
