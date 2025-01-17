@@ -72,6 +72,16 @@ function ems_create_table()
 
     include_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
+
+    // Create wordpress page
+    $pageData = [
+        'post_title' => 'Employee Management System',
+        'post_status' => 'publish',
+        'post_type' => 'page',
+        'post_content' => "This is sample content",
+        'post_name' => 'employee-management-system-page'
+    ];
+    wp_insert_post($pageData);
 }
 
 // Uninstall this plugin to delete database table
@@ -86,6 +96,17 @@ function ems_drop_table()
     $sql = "DROP TABLE IF EXISTS {$table_prefix}ems_form_data";
 
     $wpdb->query($sql);
+
+    // Delete wordpress page
+    $pageSlug = 'employee-management-system-page';
+    $pageInfo = get_page_by_path($pageSlug);
+
+    if (!empty($pageInfo)) {
+
+        $pageId = $pageInfo->ID;
+
+        wp_delete_post($pageId, true);
+    }
 }
 
 // Enqueue scripts and styles
